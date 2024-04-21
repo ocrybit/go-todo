@@ -44,8 +44,10 @@ func command() {
 	fmt.Println("Command:", cmd)
 
 	switch cmd {
-	case "a", "add":
-		add()
+	case "a", "add": add()
+	case "q", "quit":
+		fmt.Println("Bye!")
+		return
 	default:
 		fmt.Println("unknown command:", cmd)
 	}
