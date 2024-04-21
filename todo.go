@@ -136,6 +136,18 @@ func complete() {
 	}
 }
 
+func trash() {
+	var new_todos []Task
+	for _, task := range todos {
+		if !task.done {
+			new_todos = append(new_todos, task)
+		}
+	}
+	todos = new_todos
+	save()
+	show()
+}
+
 func command() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("\nenter command: ")
@@ -146,6 +158,7 @@ func command() {
 	switch cmd {
 	case "s", "show": show()
 	case "c", "complete": complete()
+	case "t", "trash": trash()
 	case "a", "add": add()
 	case "d", "del": del()
 	case "q", "quit":
