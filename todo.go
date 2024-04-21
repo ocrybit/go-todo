@@ -14,7 +14,6 @@ type Task struct {
 	id uint
 	name string
 	done bool
-	
 }
 
 var todos []Task
@@ -39,20 +38,22 @@ func load() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		fields := strings.Split(line, ",")
-		id, _ := strconv.ParseUint(fields[0], 10, 32)
+		_id, _ := strconv.ParseUint(fields[0], 10, 32)
+		if uint(_id) > id { id = uint(_id) }
 		done, _ := strconv.ParseBool(fields[2])
-		todos = append(todos, Task{uint(id), fields[1], done})
+		todos = append(todos, Task{uint(_id), fields[1], done})
 	}
 }
 
+func show(){
+	for i, task := range todos {
+		fmt.Printf("[ %02d # %03d ] %s\n", i, task.id, task.name)
+	}
+}
 func add() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("enter task: ")
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error: ", err)
-		return
-	}
+	input, _ := reader.ReadString('\n')
 	words := strings.Split(strings.TrimSpace(input), ",")
 	id++
 	task := Task{ id, words[0], false }
@@ -64,18 +65,14 @@ func add() {
 func command() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("enter command: ")
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error: ", err)
-		return
-	}
-	
+	input, _ := reader.ReadString('\n')
 	words := strings.Split(strings.TrimSpace(input), ",")
 	cmd := words[0]
 	
 	fmt.Println("Command:", cmd)
 
 	switch cmd {
+	case "s", "show": show()
 	case "a", "add": add()
 	case "q", "quit":
 		fmt.Println("Bye!")
