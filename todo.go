@@ -60,6 +60,34 @@ func add() {
 	todos = append(todos, task)
 	fmt.Println(todos)
 	save()
+	show()
+}
+
+func del() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("enter id: ")
+	input, _ := reader.ReadString('\n')
+	words := strings.Split(strings.TrimSpace(input), ",")
+	_id, _ := strconv.ParseUint(words[0], 10, 64)
+	var index int = -1
+	for i, task := range todos {
+		if uint(_id) == task.id {
+			index = i
+			break
+		}
+	}
+
+	if(index != -1){
+		var new_todos []Task
+		if index == 0 {
+			new_todos = todos[1:]
+		}else {
+			new_todos = append(todos[0:index], todos[index + 1:]...)
+		}
+		todos = new_todos
+		save()
+		show()
+	}
 }
 
 func command() {
@@ -74,6 +102,7 @@ func command() {
 	switch cmd {
 	case "s", "show": show()
 	case "a", "add": add()
+	case "d", "del": del()
 	case "q", "quit":
 		fmt.Println("Bye!")
 		return
